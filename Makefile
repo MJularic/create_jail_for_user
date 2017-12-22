@@ -5,7 +5,6 @@ setup:
 	@echo '=====! Installing jailkit tool !===='
 	wget http://olivier.sessink.nl/jailkit/jailkit-2.19.tar.gz
 	tar -xf jailkit-2.19.tar.gz
-	cd jailkit-2.17/
+	cd  ./jailkit-2.19
 	./configure && make
-	su root
-	make install
+	sudo make install
