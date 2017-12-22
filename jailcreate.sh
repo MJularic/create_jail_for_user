@@ -4,10 +4,9 @@ echo "Jail location at /$JAIL_FILENAME"
 echo 
 
 sudo mkdir -p /$JAIL_FILENAME
-jail_location=/$JAIL_FILENAME
 
 # initialize jail
-sudo jk_init -j $jail_location jk_lsh
+sudo jk_init -j /$JAIL_FILENAME jk_lsh
 
 while IFS= read -r lib
 do
@@ -15,7 +14,7 @@ do
 	if [ ! -z "$lib" ]
 	then
 		echo "Copying $lib"
-		sudo jk_cp -j $jail_location $lib > /dev/null
+		sudo jk_cp -j /$JAIL_FILENAME $lib > /dev/null
 	fi
 	
 done < "$REQUIREMENTS"
