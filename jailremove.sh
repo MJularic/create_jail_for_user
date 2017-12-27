@@ -17,6 +17,10 @@ do
 	sudo userdel -r sandbox$i	
 done
 
-echo "Removing jail folder $JAIL_FILENAME"
-sudo rm -r $JAIL_FILENAME
+echo "Removing jail folder /$JAIL_FILENAME"
+echo
+sudo rm -r /$JAIL_FILENAME
 sudo rm -r users.txt
+echo "Removing entry in /etc/rc.local to modify iptables upon reboot"
+echo
+sudo sed -i '/sandbox/d' /etc/rc.local
