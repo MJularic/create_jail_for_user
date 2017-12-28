@@ -11,6 +11,13 @@ then
 	echo "$file already exists, specify another JAIL_FILENAME!"
 	exit
 fi
+
+if [ -z "$REQUIREMENTS" ]
+then
+    echo "Specify REQUIREMENTS!"
+    exit
+fi
+
 file="$REQUIREMENTS"
 if [ ! -f "$file" ]
 then

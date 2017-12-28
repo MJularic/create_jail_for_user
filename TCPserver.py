@@ -15,7 +15,7 @@ try:
     while True:
         data = connection.recv(buffer_size)
         if not data: break
-        print("Received data: ",data.decode('ascii'))
+        print(data.decode('ascii'))
         connection.send(data)
     connection.close()
 except:
