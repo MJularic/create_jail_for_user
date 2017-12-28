@@ -1,24 +1,51 @@
 #!/bin/bash
-for (( i=1; i<=$USER_NUM; i++))
+if [ -z "$JAIL_FILENAME" ]
+then
+    echo "Specify JAIL_FILENAME!"
+    exit
+fi
+
+file="/$JAIL_FILENAME"
+if [ ! -d "$file" ]
+then
+    echo "$file doesn't exist"
+    exit
+fi
+
+sudo cat /etc/passwd | grep $JAIL_FILENAME >> users.txt
+while IFS= read -r user
 do
-	echo "Creating user sandbox$i"
+
+	if [ ! -z "$user" ]
+	then
+		num=$((num+1))
+	fi
+
+done < "users.txt"
+rm -r users.txt
+
+num=$((num+1))
+USER_NUM=$((USER_NUM+num-1))
+
+for (( i=num; i<=$USER_NUM; i++))
+do
+	echo "Creating user $JAIL_FILENAME$i"
 	echo 
-	sudo useradd -m sandbox$i
-	echo "Disabling internet connection for sandbox$i"
+	sudo useradd -m $JAIL_FILENAME$i
+	echo "Disabling internet connection for $JAIL_FILENAME$i"
 	echo 
-	sudo iptables -A OUTPUT -p all -m owner --uid-owner sandbox$i -j DROP
-	#sudo sed -i "/exit 0/i \\sudo iptables -A OUTPUT -p all -m owner --uid-owner sandbox${i} -j DROP\\" /etc/rc.local
+	sudo iptables -A OUTPUT -p all -m owner --uid-owner $JAIL_FILENAME$i -j DROP
 	sudo sed -i '/^\s*$/d' /etc/rc.local
-	sudo sed -i "\$i sudo iptables -A OUTPUT -p all -m owner --uid-owner sandbox${i} -j DROP" /etc/rc.local
+	sudo sed -i "\$i sudo iptables -A OUTPUT -p all -m owner --uid-owner ${JAIL_FILENAME}${i} -j DROP" /etc/rc.local
 
 done
 
-for (( i=1; i<=$USER_NUM; i++))
+for (( i=num; i<=$USER_NUM; i++))
 do
 
-	echo "Jailing user sandbox$i"
+	echo "Jailing user $JAIL_FILENAME$i"
 	echo
-	sudo jk_jailuser -j /$JAIL_FILENAME sandbox$i
+	sudo jk_jailuser -j /$JAIL_FILENAME $JAIL_FILENAME$i
 
 done
 
