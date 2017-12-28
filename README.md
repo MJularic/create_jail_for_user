@@ -97,26 +97,44 @@ in which the user is jailed and specify the command you wish to run.
 ````
 $ sudo chroot --userspec=username /jail_name command_to_run
 ````
-For example you can run untrusted python3 code located inside the jail 
-directory named alcatraz with the user named prisoner located inside the jail
+For example you can run untrusted python3 **code located inside the jail 
+directory** named `alcatraz` with the user named `prisoner` located inside the jail
 by executing 
 ````
 $ sudo chroot --userspec=prisoner /alcatraz python3 path_to_untrusted_code
 ````
-This is possible only if you specified inside the requirements file to 
-copy python3 inside the jail directory.
+This is possible only if you specify inside the requirements file to 
+copy python3 inside the jail directory upon creation.
 ## Hazards
 ### Fork Bombing
-[todo]
-
+To prevent a code inside the jail to fork multiple processes and thereby
+execute a malicious attack called fork bomb the code is run using the prlimit
+command 
+````
+$ sudo prlimit --noproc=max_num_of_processes chroot --userspec=username /jail_name command_to_run
+````
+For example you can run untrusted python3 **code located inside the jail 
+directory** named `alcatraz` with the user named `prisoner` located inside the jail
+with a maximum of 1 process by executing
+````
+$ sudo prlimit --noproc=1 chroot --userspec=prisoner /alcatraz python3 path_to_untrusted_code
+````
 ### Network Connection
-[todo]
+Network connection is disabled by default when jailing users 
+with the `jailusers.sh` script. 
+If you wish to grant the jailed users the ability to gain network 
+access **which is not advised** when executing untrusted code 
+comment out the lines 37, 38 and 39 in the `jailusers.sh` script.
 
 ### Filesystem access
-[todo]
+The jailed user can only move around the files inside the jail and 
+doesn't have access to the files beyond the jail. The user can only
+modify files in his home directory and can read all the other files 
+in the jail but can't modify them.
 
 ### System tools usage
-[todo]
+It is strongly advised to provide the jailed user with only the
+necessary tools to execute his code.
 
 ## License
 MIT
