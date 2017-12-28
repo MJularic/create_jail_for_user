@@ -13,20 +13,20 @@ This project uses the Jailkit tool developed by Olivier Sessink.
 To install the Jailkit tool needed for the other 
 scripts to run properly you can install it from the official 
 [Jailkit webiste](https://olivier.sessink.nl/jailkit/) or run 
-the jailinstall.sh script from the cloned repository 
+the `jailinstall.sh` script from the cloned repository 
 (make sure it is executable).
 ````
 $ ./jailinstall.sh
 ````
 #### Removal
 To remove the Jailkit tool and all of its dependencies run the
-jailuninstall.sh script from the cloned repository
+`jailuninstall.sh` script from the cloned repository
 (make sure it is executable).
 ````
 $ ./jailuninstall.sh
 ````
 ### Setup
-To create a jail folder run the script jailcreate.sh (make sure it is executable)
+To create a jail folder run the script `jailcreate.sh` (make sure it is executable)
 from the cloned repository. Provide a name for the jail directory
 and by default the jail directory is placed inside the root directory /. Specify the full
 path to the requirements file if it is not inside the same folder as the script.   
@@ -36,12 +36,13 @@ tools that are necessary in order to run code inside the jail.
 $ JAIL_FILENAME=name REQUIREMENTS=requirements ./jailcreate.sh
 ````
 
-To jail a user inside the jail directory run the jailusers.sh 
+To jail a user inside the jail directory run the `jailusers.sh` 
 script (make sure it is executable). Enter the jail name and the 
 number of users to jail. The script will create the specified number
 of users,jail them and disable access to the network for those users.
 This script can be called multiple times with 
-the same jail directory.  
+the same jail directory. Usernames for the jailed users are constructed
+by appending the name of the jail directory and the ordinal number of insertion into the jail.
 ````
 $ JAIL_FILENAME=name USER_NUM=user_num ./jailusers.sh
 ````
@@ -63,20 +64,47 @@ Create for example two users and jail them
 ````
 $ JAIL_FILENAME=jail USER_NUM=2 ./jailusers.sh
 ````
-To check if it all works run the jailtest.sh script which runs the 
-proc_test.py to check if the jailed users can fork processes
-and the TCPclient.py and TCPserver.py to check if
+This creates the users jail1 and jail2.
+If you decide to run the command again it would create the users
+jail3 and jail4.
+
+To check if it all works run the `jailtest.sh` (make sure it is executable) script which runs the 
+`proc_test.py` to check if the jailed users can fork processes
+and the `TCPclient.py` and `TCPserver.py` to check if
 the jailed users can make network connections. If the users can't do any of
 the above mentioned the tests will pass and the users are jailed.
 ````
 $ JAIL_FILENAME=jail ./jailtest.sh
 ````
+To remove the example jail directory, all of its users and 
+configurations run
+````
+$ JAIL_FILENAME=jail ./jailremove.sh
+````
 #### Remove setup
-
-
+To remove the jail directory run the `jailremove.sh` 
+(make sure it is executable) script from the cloned repository. Specify the 
+name of the jail directory to remove and the script will remove the jail directory, 
+all the jailed users and all the configurations made during the process of jailing the users.
+````
+$ JAIL_FILENAME=name ./jailremove.sh
+````
 ### Running processes in jail
-[todo]
-
+To run a command inside the jail the `chroot` command is used.
+Run the `chroot` command as sudo, specify the username of the jailed
+user with whom you wish to execute the command, specify the jail directory
+in which the user is jailed and specify the command you wish to run.
+````
+$ sudo chroot --userspec=username /jail_name command_to_run
+````
+For example you can run untrusted python3 code located inside the jail 
+directory named alcatraz with the user named prisoner located inside the jail
+by executing 
+````
+$ sudo chroot --userspec=prisoner /alcatraz python3 path_to_untrusted_code
+````
+This is possible only if you specified inside the requirements file to 
+copy python3 inside the jail directory.
 ## Hazards
 ### Fork Bombing
 [todo]
