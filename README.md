@@ -111,13 +111,13 @@ To prevent a code inside the jail to fork multiple processes and thereby
 execute a malicious attack called fork bomb the code is run using the prlimit
 command 
 ````
-$ sudo prlimit --noproc=max_num_of_processes chroot --userspec=username /jail_name command_to_run
+$ sudo prlimit --nproc=max_num_of_processes chroot --userspec=username /jail_name command_to_run
 ````
 For example you can run untrusted python3 **code located inside the jail 
 directory** named `alcatraz` with the user named `prisoner` located inside the jail
 with a maximum of 1 process by executing
 ````
-$ sudo prlimit --noproc=1 chroot --userspec=prisoner /alcatraz python3 path_to_untrusted_code
+$ sudo prlimit --nproc=1 chroot --userspec=prisoner /alcatraz python3 path_to_untrusted_code
 ````
 ### Network Connection
 Network connection is disabled by default when jailing users 
