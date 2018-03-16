@@ -30,11 +30,11 @@ rm -r users.txt
 for (( i=1; i<=num; i++ ))
 do
     echo "TESTING USER $JAIL_FILENAME$i"
-	sudo prlimit --nproc=1 chroot --userspec=$JAIL_FILENAME$i /jail python3 proc_test.py
-    python3 TCPserver.py & sudo prlimit --nproc=1 chroot --userspec=$JAIL_FILENAME$i /jail python3 TCPclient.py &
+	sudo prlimit --nproc=1 chroot --userspec=$JAIL_FILENAME$i /jail python3.6 proc_test.py
+    python3.6 TCPserver.py & sudo prlimit --nproc=1 chroot --userspec=$JAIL_FILENAME$i /jail python3.6 TCPclient.py &
     wait
     echo
 done
 
-sudo rm -r /jail/TCPclient.py
-sudo rm -r /jail/proc_test.py
+sudo rm -r /$JAIL_FILENAME/TCPclient.py
+sudo rm -r /$JAIL_FILENAME/proc_test.py

@@ -45,7 +45,7 @@ do
 
 	echo "Jailing user $JAIL_FILENAME$i"
 	echo
-	sudo jk_jailuser -j /$JAIL_FILENAME $JAIL_FILENAME$i
+	sudo jk_jailuser -n -j /$JAIL_FILENAME $JAIL_FILENAME$i 
 
 done
 
